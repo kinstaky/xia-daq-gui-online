@@ -1,7 +1,7 @@
 file(GLOB SRC_FILES *.cc)
 add_library(gui SHARED ${SRC_FILES})
 target_include_directories(
-	gui PUBLIC ${PROJECT_SOURCE_DIR} ROOT_INCLUDE_DIR
+	gui PUBLIC ${PROJECT_SOURCE_DIR} ROOT_INCLUDE_DIRS
 )
 target_link_libraries(
 	gui PUBLIC

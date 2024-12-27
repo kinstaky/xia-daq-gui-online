@@ -586,7 +586,7 @@ int Detector::StartRun(int continue_run)
 	memcpy(shmptr_dec,&runnumber,sizeof(int));
 	for(unsigned short i = 0;i < NumModules;i++)
 		{
-			memcpy(shmptr_dec+4+4*i,&buffid[i],sizeof(int));
+			memcpy(shmptr_dec+4+4*i,&buffer_top_[i],sizeof(int));
 		}
 #endif
 
@@ -1062,11 +1062,11 @@ int Detector::SavetoFile(int nFile)
 		memcpy(&point,shmptr_dec+4+4*nFile,sizeof(int));
 		if(point == 0)
 			{
-				memcpy(shmptr_dec+60+BUFFLENGTH*4*nFile,&buff[nFile],sizeof(int)*buffid[nFile]);
-				memcpy(shmptr_dec+4+4*nFile,&buffid[nFile],sizeof(int));
+				memcpy(shmptr_dec+60+BUFFER_LENGTH*4*nFile,&buffer_[nFile],sizeof(int)*buffer_top_[nFile]);
+				memcpy(shmptr_dec+4+4*nFile,&buffer_top_[nFile],sizeof(int));
 				break;
 			}
-		std::cout<<"Wait Mod: "<<nFile<<"  Buff: "<<buffid[nFile]<<std::endl;
+		std::cout<<"Wait Mod: "<<nFile<<"  Buff: "<<buffer_top_[nFile]<<std::endl;
 	}
 		}
 #endif
@@ -1187,12 +1187,12 @@ void Detector::InitDecoderOnline()
 			std::cout<<"Can not create shared memory [decoderonline]"<<std::endl;
 		}
 
-	if(ftruncate(shmfd_dec,(off_t)(60+BUFFLENGTH*13*4)) < 0)
+	if(ftruncate(shmfd_dec,(off_t)(60+BUFFER_LENGTH*13*4)) < 0)
 		{
 			std::cout<<"Can not alloc memory for shared memory [decoderonline] !"<<std::endl;
 		}
 
-	if((shmptr_dec = (unsigned char*) mmap(NULL,60+BUFFLENGTH*13*4, PROT_READ|PROT_WRITE,MAP_SHARED,shmfd_dec,0)) == MAP_FAILED)
+	if((shmptr_dec = (unsigned char*) mmap(NULL,60+BUFFER_LENGTH*13*4, PROT_READ|PROT_WRITE,MAP_SHARED,shmfd_dec,0)) == MAP_FAILED)
 		{
 			std::cout<<"Can not mmap the shared memroy [decoderonline] to process space"<<std::endl;
 		}

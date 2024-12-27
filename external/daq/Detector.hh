@@ -187,7 +187,7 @@ private:
 	unsigned int shmid1,shmid2;
 
 #ifdef DECODERONLINE
-	// int    shmfd_dec;  // shared memory id
+	int    shmfd_dec;  // shared memory id
 	unsigned char *shmptr_dec;// pointer to shm
 	// runnumber 4 byte
 	// bufflegth 4 byte * 13
