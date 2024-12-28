@@ -565,8 +565,24 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   labelcontrol->SetFrameDrawn(kFALSE);
   labelcontrol->ChangeBackground(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
 
-
-
+	lock_button_ = new TGCheckButton(controlgroup, "Lock panel");
+	lock_button_->SetBackgroundColor(
+		TColor::RGB2Pixel(FRAME_BG_R, FRAME_BG_G, FRAME_BG_B)
+	);
+	lock_button_->SetTextColor(
+		TColor::RGB2Pixel(
+			CHECKBUTTON_TEXT_R,
+			CHECKBUTTON_TEXT_G,
+			CHECKBUTTON_TEXT_B
+		)
+	);
+	lock_button_->SetFont(CHECKBUTTON_FONT, false);
+	lock_button_->SetState(kButtonUp);
+	lock_button_->Connect("Clicked()", "MainFrame", this, "LockPanel()");
+	controlgroup->AddFrame(
+		lock_button_,
+		new TGLayoutHints(kLHintsLeft|kLHintsTop, 0, 0, 5, 10)
+	);
 
   
   TGHorizontalFrame *cgrouphframe0 = new TGHorizontalFrame(controlgroup);
@@ -805,6 +821,28 @@ void MainFrame::SetFileName()
       std::cout<<"The output file directory does not exist."<<std::endl;
     }
 }
+
+
+void MainFrame::LockPanel() {
+	if (lock_button_->IsDown()) {
+		startdaq->SetEnabled(false);
+		onlinechk->SetEnabled(false);
+		recordchk->SetEnabled(false);
+		updateenergyonline->SetEnabled(false);
+#ifdef DECODERONLINE
+		decoderchk->SetEnabled(false);
+#endif
+	} else {
+		startdaq->SetEnabled(true);
+		onlinechk->SetEnabled(true);
+		recordchk->SetEnabled(true);
+		updateenergyonline->SetEnabled(true);
+#ifdef DECODERONLINE
+		decoderchk->SetEnabled(true);
+#endif
+	}
+}
+
 
 void MainFrame::StartRun()
 {

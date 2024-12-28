@@ -94,6 +94,7 @@ public:
 
   void SetFileName();
   void ConfigFileInfo();
+  void LockPanel();
   void StartRun();
   void SetOnlineDataFlag();
   void SetRecordDataFlag();
@@ -172,6 +173,7 @@ private:
   TGTextButton	*filesetdone;
 
   // ******* ListMode Run Control **********
+  TGCheckButton *lock_button_;
   TGTextButton	*startdaq;
   TGCheckButton   *onlinechk;
   TGCheckButton   *recordchk;

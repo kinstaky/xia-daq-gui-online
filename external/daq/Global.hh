@@ -38,8 +38,9 @@ Art Director:\n\
 ";
 
 // Features customized for special users
-// #define DECODERONLINE
+#define REMOTE_CONTROL_GRPC
 
+#define DECODERONLINE
 
 // #define RECODESHA256
 
