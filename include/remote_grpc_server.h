@@ -6,10 +6,6 @@
 #include "pixie16_rong.grpc.pb.h"
 #include "external/daq/MainFrame.hh"
 
-constexpr int32_t kControlRunNumber = 0;
-constexpr int32_t kControlRunStatus = 1;
-constexpr int32_t kControlRunStart = 2;
-
 class RongPixie16Service final : public rong::pixie16::CallbackService {
 public:
 	explicit RongPixie16Service(MainFrame *frame);

@@ -1,5 +1,13 @@
 #include "include/remote_grpc_server.h"
 
+constexpr int kStateIdle = 3;
+constexpr int kStateRunning = 2;
+constexpr int kStateError = 1;
+constexpr int kStateOff = 0;
+constexpr int kActionRunNumber = 0;
+constexpr int kActionRunStart = 1;
+constexpr int kActionRunChange = 2;
+
 RongPixie16Service::RongPixie16Service(MainFrame *frame)
 : frame_(frame) {
 }
@@ -9,7 +17,7 @@ grpc::ServerUnaryReactor* RongPixie16Service::GetState(
     const rong::Request *request,
     rong::Reply *reply
 ) {
-	reply->set_status(1);
+	reply->set_status(frame_->IsRunning() ? kStateRunning : kStateIdle);
 	auto *reactor = context->DefaultReactor();
 	reactor->Finish(grpc::Status::OK);
 	return reactor;
@@ -21,16 +29,20 @@ grpc::ServerUnaryReactor* RongPixie16Service::RunControl(
 	const rong::Action *action,
 	rong::Reply *reply
 ) {
-	if (action->type() == kControlRunNumber) {
+	if (action->type() == kActionRunNumber) {
 		// get run number
 		reply->set_status(frame_->RunNumber());
-	} else if (action->type() == kControlRunStatus) {
-		// check run status
-		reply->set_status(frame_->IsRunning() ? 1 : 0);
-	} else if (action->type() == kControlRunStart) {
-		// change run status
+	} else if (action->type() == kActionRunStart) {
+		// start new run
 		frame_->StartRun();
 		reply->set_status(frame_->IsRunning() ? 1 : 0);
+	} else if (action->type() == kActionRunChange) {
+		if (frame_->IsRunning()) {
+			reply->set_status(-1);
+		} else {
+			frame_->ChangeRunNumber(action->option());
+			reply->set_status(frame_->RunNumber());
+		}
 	}
 	auto* reactor = context->DefaultReactor();
     reactor->Finish(grpc::Status::OK);

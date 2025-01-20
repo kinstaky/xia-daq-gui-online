@@ -1038,20 +1038,16 @@ void MainFrame::SetOnlineMode()
   startdaq->SetEnabled(0);
 }
 
-void MainFrame::SetOnlineDataFlag()
-{
-   if(detector == NULL) return;
-  if(onlinechk->IsOn())
-    {
-      fonlinedata = 1;
-      detector->SetOnlineFlag(1);
-      std::cout<<"DAQ will send online data!"<<std::endl;
-    }
-  else
-    {
-      fonlinedata = 0;
-      detector->SetOnlineFlag(0);
-      std::cout<<"DAQ wont send online data!"<<std::endl;
+void MainFrame::SetOnlineDataFlag() {
+	if(detector == NULL) return;
+  	if(onlinechk->IsOn()) {
+		fonlinedata = 1;
+		detector->SetOnlineFlag(1);
+		std::cout<<"DAQ will send online data!"<<std::endl;
+    } else {
+		fonlinedata = 0;
+		detector->SetOnlineFlag(0);
+		std::cout<<"DAQ wont send online data!"<<std::endl;
     }
 }
 
@@ -1063,6 +1059,14 @@ bool MainFrame::IsRunning() {
 
 int32_t MainFrame::RunNumber() {
 	return runnum;
+}
+
+
+void MainFrame::ChangeRunNumber(int32_t new_run) {
+	runnum = new_run;
+	if (filerunnum) {
+		filerunnum->SetIntNumber(runnum);
+	}
 }
 
 

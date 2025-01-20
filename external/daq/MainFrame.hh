@@ -102,6 +102,7 @@ public:
   void SetOnlineMode();
   bool IsRunning();
   int32_t RunNumber();
+  void ChangeRunNumber(int32_t new_run);
 #ifdef DECODERONLINE
   void SetDecoderDataFlag();
 #endif
