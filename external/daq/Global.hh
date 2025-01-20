@@ -38,7 +38,7 @@ Art Director:\n\
 ";
 
 // Features customized for special users
-#define REMOTE_CONTROL_GRPC
+// #define REMOTE_CONTROL_GRPC
 
 #define DECODERONLINE
 

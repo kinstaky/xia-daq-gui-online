@@ -1,13 +1,13 @@
-// MainFrame.cc --- 
-// 
-// Description: 
+// MainFrame.cc ---
+//
+// Description:
 // Author: Hongyi Wu(吴鸿毅)
-// Email: wuhongyi@qq.com 
+// Email: wuhongyi@qq.com
 // Created: 五 3月  9 13:01:33 2018 (+0800)
 // Last-Updated: 三 10月 12 14:53:54 2022 (+0800)
 //           By: Hongyi Wu(吴鸿毅)
 //     Update #: 434
-// URL: http://wuhongyi.cn 
+// URL: http://wuhongyi.cn
 
 #include "MainFrame.hh"
 #include "Csra.hh"
@@ -41,7 +41,7 @@ MainFrame::MainFrame(const TGWindow * p)
 {
   ///initialise variables///////////////
 
-  detector = NULL; 
+  detector = NULL;
   runnum = 0;
 
   SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -54,11 +54,11 @@ MainFrame::MainFrame(const TGWindow * p)
   // gClient->GetResourcePool()->GetFocusHiliteGC();
   // gClient->GetResourcePool()->GetSelectedGC();
   // gClient->GetResourcePool()->GetSelectedBckgndGC();
-    
+
   CreateMenuBar();
   ControlPanel(this);
 
-  
+
   SetWindowName("GDDAQ");
   MapSubwindows();
   MapWindow();
@@ -100,7 +100,7 @@ void MainFrame::CreateMenuBar()
   MenuSetup->AddEntry("Save2File", FILE_SAVE,0,gClient->GetPicture("save.xpm"));
   MenuSetup->Associate(this);
   MenuSetup->SetBackgroundColor(TColor::RGB2Pixel(0,128,0));
-  
+
   MenuExpert = new TGPopupMenu(fClient->GetRoot());
   MenuExpert->AddEntry("Module Variables", MODVAR);
   MenuExpert->AddEntry("&CSRA", CSRA);
@@ -126,13 +126,13 @@ void MainFrame::CreateMenuBar()
   MenuExp->Associate(this);
   MenuExp->SetBackgroundColor(TColor::RGB2Pixel(0,128,0));
 
-  
+
 
   // MenuBar->GetTitles()->Print();
-  
+
   // (TGMenuTitle*)(MenuBar->GetTitles()->FindObject("Offline"))->Print();
 
-  
+
   // ((TGMenuTitle*)MenuBar->GetTitles()->At(1))->SetTextColor(TColor::RGB2Pixel(TOPBAR_TEXT_R,TOPBAR_TEXT_G,TOPBAR_TEXT_B));
   // ((TGMenuTitle*)MenuBar->GetTitles()->At(2))->SetTextColor(TColor::RGB2Pixel(TOPBAR_TEXT_R,TOPBAR_TEXT_G,TOPBAR_TEXT_B));
   // ((TGMenuTitle*)MenuBar->GetTitles()->At(3))->SetTextColor(TColor::RGB2Pixel(TOPBAR_TEXT_R,TOPBAR_TEXT_G,TOPBAR_TEXT_B));
@@ -149,7 +149,7 @@ void MainFrame::CreateMenuBar()
   MenuBar->AddPopup(" &Debug ", MenuMonitor, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
   MenuBar->AddPopup("&Offline", MenuOffline, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
   MenuBar->AddPopup("Exp&Mode", MenuExp, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
-  
+
 
   // std::cout<<MenuBar->GetTitles()->GetSize()<<std::endl;
   // for (int i = 0; i < MenuBar->GetTitles()->GetSize(); ++i)
@@ -175,8 +175,8 @@ void MainFrame::CreateMenuBar()
   //   idcur = (TGMenuTitle*)MenuBar->GetTitles()->After(idcur);
   // }
 
-  
-  
+
+
   SetMenuStatus(false,flagonlinemode);
 
 }
@@ -211,7 +211,7 @@ Bool_t MainFrame::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2)
       switch (test2 = GET_SUBMSG(msg))
 	{
 
-	  ////////////////////menu popups/////////////////////////////            
+	  ////////////////////menu popups/////////////////////////////
 	case kCM_MENU:
 	  switch (parm1)
 	    {
@@ -284,9 +284,9 @@ Bool_t MainFrame::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2)
 	      expthresholdchange = new ExpThresholdChange(fClient->GetRoot(), this, detector);
 	      break;
 
-	      
 
-	      
+
+
 	    case FILE_SAVE:
 	      {
 	    	static TString dir2(".");
@@ -305,7 +305,7 @@ Bool_t MainFrame::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2)
       // fall through
 	case kCM_BUTTON:
 	  switch (parm1)
-	    {	      
+	    {
 	    case BOOT_BUTTON:
 	      bootB->SetEnabled(0);
 	      filesetdone->SetEnabled(0);
@@ -317,7 +317,7 @@ Bool_t MainFrame::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2)
 	      detector = new Detector(flagonlinemode);
 	      detector->SetRecordFlag(true);
 	      recordchk->SetState(kButtonDown);
-#ifdef DECODERONLINE	      
+#ifdef DECODERONLINE
 	      detector->SetDecoderFlag(false);
 	      decoderchk->SetState(kButtonUp);
 #endif
@@ -352,7 +352,7 @@ Bool_t MainFrame::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2)
 	default:
 	  break;
 	}
-        
+
     default:
       // selected = gPad->GetSelected();
       break;
@@ -375,7 +375,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   TabPanel->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
 
   //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
   TGCompositeFrame *TitleFrame = new TGCompositeFrame(TabPanel, 0, 0, kHorizontalFrame);
   TabPanel->AddFrame(TitleFrame, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 0, 0));
   TitleFrame->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -389,7 +389,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   char ip[1024];
   if(GetLocalIP(ip)==0)
     titleinfor->SetText(ip);
-  else 
+  else
     titleinfor->SetText("List Mode");
   titleinfor->Resize(INITIAL_WIDTH, TITLE_LISTMODE_HIGHT);
   titleinfor->SetEnabled(kFALSE);
@@ -397,7 +397,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   titleinfor->ChangeBackground(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
 
   //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
   TGGroupFrame *bootframe = new TGGroupFrame(TabPanel,"");
   TabPanel->AddFrame(bootframe,new TGLayoutHints(kLHintsExpandX|kLHintsTop,INITIAL_SIDE_WIDTH,INITIAL_SIDE_WIDTH,0,0));
   bootframe->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -410,7 +410,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   TGCompositeFrame *LogoFrame = new TGCompositeFrame(bootframe, 0, 0, kHorizontalFrame);
   bootframe->AddFrame(LogoFrame, new TGLayoutHints(kLHintsTop | kLHintsLeft, 0, 0, 10, 10));
   LogoFrame->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
   // TGImageMap* fImagePKU = new TGImageMap(LogoFrame, "../icons/logo1.png");
   // LogoFrame->AddFrame(fImagePKU,new TGLayoutHints(kLHintsLeft | kLHintsTop, 0, 0, 0, 0));
   // fImagePKU->ChangeOptions(fImagePKU->GetOptions() ^ kRaisedFrame);
@@ -425,12 +425,12 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   fImageWHY->ChangeOptions(fImageWHY->GetOptions() | kFixedSize);
   fImageWHY->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
 
-  
-  //make the buttons frame        
+
+  //make the buttons frame
   TGCompositeFrame *ButtonFrame = new TGCompositeFrame(bootframe, 0, 0, kHorizontalFrame);
-  bootframe->AddFrame(ButtonFrame, new TGLayoutHints(kLHintsTop | kLHintsExpandX, 0, 0, 7, 7));  
+  bootframe->AddFrame(ButtonFrame, new TGLayoutHints(kLHintsTop | kLHintsExpandX, 0, 0, 7, 7));
   ButtonFrame->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
   // Online mode
   onlinemode = new TGCheckButton(ButtonFrame,"Online Mode");
   onlinemode->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -439,8 +439,8 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   onlinemode->SetState(kButtonDown);
   onlinemode->Connect("Clicked()","MainFrame",this,"SetOnlineMode()");
   ButtonFrame->AddFrame(onlinemode,new TGLayoutHints(kLHintsLeft|kLHintsTop,0,0,0,0));
-  
-  // BOOT button//////////////////////////////////////////////////////////////    
+
+  // BOOT button//////////////////////////////////////////////////////////////
   bootB = new TGTextButton(ButtonFrame, "  Boot  ", BOOT_BUTTON);
   ButtonFrame->AddFrame(bootB, new TGLayoutHints(kLHintsRight | kLHintsTop, 0,0,0,0));
   bootB->ChangeOptions(bootB->GetOptions() ^ kRaisedFrame);
@@ -460,10 +460,10 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   // hsplitter->SetFrame(bootframe, kTRUE);
   TabPanel->AddFrame(hsplitter1, new TGLayoutHints(kLHintsTop | kLHintsExpandX,0,0,10,10));
   hsplitter1->SetBackgroundColor(TColor::RGB2Pixel(0,0,0));
-  
+
   //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-  
+
   // Set up for file store parametrs
   TGCompositeFrame *filesetgroup = new TGCompositeFrame(TabPanel,0,0);
  TabPanel->AddFrame(filesetgroup,new TGLayoutHints(kLHintsExpandX|kLHintsTop,INITIAL_SIDE_WIDTH,INITIAL_SIDE_WIDTH,0,0));
@@ -492,7 +492,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   filepathtext->SetTextColor(TColor::RGB2Pixel(TITLE_TEXT_R,TITLE_TEXT_G,TITLE_TEXT_B), false);
   filepathtext->SetFont(TEXTENTRY_FONT,false);
   filepathtext->Resize(INITIAL_CONTANT_WIDTH,28);
-  
+
 
   TGLabel *filenamelabel = new TGLabel(filesetgroup,"File Name: ");
   filesetgroup->AddFrame(filenamelabel,new TGLayoutHints(kLHintsLeft | kLHintsTop, 0 ,0,10,0));
@@ -507,19 +507,19 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   filenametext->SetTextColor(TColor::RGB2Pixel(TITLE_TEXT_R,TITLE_TEXT_G,TITLE_TEXT_B), false);
   filenametext->SetFont(TEXTENTRY_FONT,false);
   filenametext->Resize(INITIAL_CONTANT_WIDTH,28);
-  
+
 
   TGLabel *filerunlabel = new TGLabel(filesetgroup,"Run Num: ");
   filesetgroup->AddFrame(filerunlabel,new TGLayoutHints(kLHintsLeft| kLHintsTop,0,0,10,0));
   filerunlabel->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
   filerunlabel->SetTextColor(TColor::RGB2Pixel(LABEL_TEXT_R,LABEL_TEXT_G,LABEL_TEXT_B),false);
   filerunlabel->SetTextFont(LABEL_FONT,false);
-  
-  // Run Num frame 
+
+  // Run Num frame
   TGHorizontalFrame *runnumf = new TGHorizontalFrame(filesetgroup);
   filesetgroup->AddFrame(runnumf,new TGLayoutHints(kLHintsExpandX|kLHintsTop));
   runnumf->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
 
   filerunnum = new TGNumberEntry(runnumf,0,5,999,TGNumberFormat::kNESInteger,TGNumberFormat::kNEANonNegative);
   filerunnum->SetButtonToNum(true);
@@ -532,7 +532,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   filerunnum->GetButtonDown()->ChangeOptions(filerunnum->GetButtonDown()->GetOptions() ^ kRaisedFrame);
   filerunnum->ChangeSubframesBackground(TColor::RGB2Pixel(TEXTENTRY_BG_R,TEXTENTRY_BG_G,TEXTENTRY_BG_B));
 
-  
+
   filesetdone = new TGTextButton(runnumf,"Complete");
   filesetdone->Connect("Pressed()","MainFrame",this,"ConfigFileInfo()");
   runnumf->AddFrame(filesetdone,new TGLayoutHints(kLHintsRight|kLHintsTop,0,0,4,0));
@@ -541,7 +541,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   filesetdone->SetFont(TEXTBUTTON_FONT, false);
   filesetdone->Resize(100,24);
   filesetdone->ChangeOptions(filesetdone->GetOptions() ^ kRaisedFrame);
-  
+
   //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
   TGHSplitter *hsplitter2 = new TGHSplitter(TabPanel,INITIAL_WIDTH,2);
@@ -549,8 +549,8 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   hsplitter2->SetBackgroundColor(TColor::RGB2Pixel(0,0,0));
 
   //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
-  
+
+
   // Control of list mode run
   TGCompositeFrame *controlgroup = new TGCompositeFrame(TabPanel,0,0);
   TabPanel->AddFrame(controlgroup,new TGLayoutHints(kLHintsExpandX|kLHintsTop,INITIAL_SIDE_WIDTH,INITIAL_SIDE_WIDTH,0,0));
@@ -584,11 +584,11 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
 		new TGLayoutHints(kLHintsLeft|kLHintsTop, 0, 0, 5, 10)
 	);
 
-  
+
   TGHorizontalFrame *cgrouphframe0 = new TGHorizontalFrame(controlgroup);
   controlgroup->AddFrame(cgrouphframe0,new TGLayoutHints(kLHintsExpandX|kLHintsTop));
   cgrouphframe0->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
   // send/not send online data stream box
   onlinechk = new TGCheckButton(cgrouphframe0,"Online Statistics");
   onlinechk->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -607,9 +607,9 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   frecorddata = 1;
   recordchk->Connect("Clicked()","MainFrame",this,"SetRecordDataFlag()");
   cgrouphframe0->AddFrame(recordchk,new TGLayoutHints(kLHintsRight|kLHintsTop,0,0,5,10));
-  
 
-  
+
+
   TGHorizontalFrame *cgrouphframe1 = new TGHorizontalFrame(controlgroup);
   controlgroup->AddFrame(cgrouphframe1,new TGLayoutHints(kLHintsExpandX|kLHintsTop));
   cgrouphframe1->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -624,10 +624,10 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   startdaq->ChangeOptions(startdaq->GetOptions() | kFixedSize);
   startdaq->ChangeOptions(startdaq->GetOptions() ^ kRaisedFrame);
   cgrouphframe1->AddFrame(startdaq,new TGLayoutHints(kLHintsCenterX|kLHintsTop));
-  
 
 
-  
+
+
   TGHorizontalFrame *cgrouphframe2 = new TGHorizontalFrame(controlgroup);
   controlgroup->AddFrame(cgrouphframe2,new TGLayoutHints(kLHintsExpandX|kLHintsTop));
   cgrouphframe2->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -649,9 +649,9 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   decoderchk->Connect("Clicked()","MainFrame",this,"SetDecoderDataFlag()");
   cgrouphframe2->AddFrame(decoderchk,new TGLayoutHints(kLHintsRight|kLHintsTop,0,0,10,3));
 #endif
-  
 
-  
+
+
   // restore last run's file information
   char tmp[200];
   ifstream in("./parset/Run.config");
@@ -675,7 +675,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   hsplitter3->SetBackgroundColor(TColor::RGB2Pixel(0,0,0));
 
   //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
   // run information
   TGCompositeFrame *informationgroup = new TGCompositeFrame(TabPanel,0,0);
   TabPanel->AddFrame(informationgroup,new TGLayoutHints(kLHintsExpandX|kLHintsTop,INITIAL_SIDE_WIDTH,INITIAL_SIDE_WIDTH,0,0));
@@ -694,11 +694,11 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
 
 
 
-  
+
   TGHorizontalFrame *versionstatusframe = new TGHorizontalFrame(informationgroup);
   informationgroup->AddFrame(versionstatusframe,new TGLayoutHints(kLHintsLeft|kLHintsTop,0,0,0,0));
   versionstatusframe->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
   TGTextEntry *versiontextinfor = new TGTextEntry(versionstatusframe,new TGTextBuffer(30), 10000);
   versionstatusframe->AddFrame(versiontextinfor, new TGLayoutHints(kLHintsLeft | kLHintsTop, 0, 0, 6, 5));
   versiontextinfor->SetFont(INFORMATION_FONT, false);
@@ -707,7 +707,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   versiontextinfor->SetEnabled(kFALSE);
   versiontextinfor->SetFrameDrawn(kFALSE);
   versiontextinfor->ChangeBackground(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
   TGHorizontalFrame *StateMsgFrame = new TGHorizontalFrame(informationgroup);
   informationgroup->AddFrame(StateMsgFrame,new TGLayoutHints(kLHintsExpandX|kLHintsTop));
   StateMsgFrame->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -725,7 +725,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   StateMsgFold1->SetFrameDrawn(kFALSE);
   StateMsgFold1->ChangeBackground(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
 
-  
+
   TGHorizontalFrame *lastruninfor = new TGHorizontalFrame(informationgroup);
   informationgroup->AddFrame(lastruninfor,new TGLayoutHints(kLHintsExpandX|kLHintsTop));
   lastruninfor->SetBackgroundColor(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
@@ -750,7 +750,7 @@ void MainFrame::ControlPanel(TGCompositeFrame *TabPanel)
   citetextinfor->SetEnabled(kFALSE);
   citetextinfor->SetFrameDrawn(kFALSE);
   citetextinfor->ChangeBackground(TColor::RGB2Pixel(FRAME_BG_R,FRAME_BG_G,FRAME_BG_B));
-  
+
 }
 
 void MainFrame::ConfigFileInfo()
@@ -761,7 +761,7 @@ void MainFrame::ConfigFileInfo()
       out<<filepathtext->GetText()<<std::endl;
       out<<filenametext->GetText()<<std::endl;
       out.close();
-      
+
       startdaq->SetEnabled(1);
       fstartdaq = 0;
       detector->SetRunFlag(fstartdaq);
@@ -792,7 +792,7 @@ void MainFrame::SetFileName()
   runnum = (int)filerunnum->GetIntNumber();
 
   CreateDirectory(TString::Format("%s%04d",path,runnum).Data());
-  
+
   detector->SetRunNumber(runnum);
   for(int i = 0; i < detector->NumModules; i++)
     {
@@ -803,14 +803,14 @@ void MainFrame::SetFileName()
 
   sprintf(DSPParsFileName,"%s%04d/DSPPar.set",path,runnum);
   sprintf(LogFileName,"%s%04d/run.log",path,runnum);
-  
+
   if(IsDirectoryExists(TString::Format("%s%04d",path,runnum).Data()))
     {
       ofstream out("./parset/Run.config");
       out<<filepathtext->GetText()<<endl;
       out<<filenametext->GetText()<<endl;
       out.close();
-      
+
       startdaq->SetEnabled(1);
       fstartdaq = 0;
       detector->SetRunFlag(fstartdaq);
@@ -846,6 +846,9 @@ void MainFrame::LockPanel() {
 
 void MainFrame::StartRun()
 {
+#ifdef REMOTE_CONTROL_GRPC
+	start_flag_mutex_.lock();
+#endif
   if(fstartdaq == 0)
     {
       onlinemode->SetEnabled(0);
@@ -854,9 +857,9 @@ void MainFrame::StartRun()
 #ifdef DECODERONLINE
       decoderchk->SetEnabled(0);
 #endif
-      
+
       SetMenuStatus(false,flagonlinemode);
-      
+
       SetFileName();
       detector->SetOnlineFlag(fonlinedata);
 
@@ -866,11 +869,14 @@ void MainFrame::StartRun()
 	  if(!detector->OpenSaveFile(i,Filename[i]))
 	    {
 	      cout<<Filename[i]<<endl;
-	      return;
+#ifdef REMOTE_CONTROL_GRPC
+				start_flag_mutex_.unlock();
+#endif
+				return;
 	    }
 	}
 
-      
+
       std::ofstream writelog;//fstream
       writelog.open(LogFileName,ios::app);//ios::bin ios::app
       if(!writelog.is_open())
@@ -894,8 +900,8 @@ void MainFrame::StartRun()
       char tmp[64];
       strftime(tmp, sizeof(tmp), "Start: %Y-%m-%d %H:%M:%S",localtime(&timep));
       writelog<<tmp<<std::endl;
-      writelog.close();    
-      
+      writelog.close();
+
       if(detector->StartRun(0))
 	{
 	  std::cout<<"CANNOT start the LSM Run!"<<std::endl;
@@ -905,22 +911,30 @@ void MainFrame::StartRun()
 	  onlinemode->SetEnabled(1);
 	  filesetdone->SetEnabled(1);
 	  recordchk->SetEnabled(1);
-	  return;
+#ifdef REMOTE_CONTROL_GRPC
+		start_flag_mutex_.unlock();
+#endif
+		return;
 	}
 
       fstartdaq = 1;
+#ifdef REMOTE_CONTROL_GRPC
+			start_flag_mutex_.unlock();
+#endif
       detector->SetRunFlag(fstartdaq);
-      usleep(100000); //delay for the DSP boot 
+      usleep(100000); //delay for the DSP boot
       // sleep(2);// wait 2 seconds for modules to be ready
       // start a new run, not resume
-      
+
       startdaq->SetText("Run Stop");
       RunReadData();
     }
   else
     {
       fstartdaq = 0;
-      
+#ifdef REMOTE_CONTROL_GRPC
+			start_flag_mutex_.unlock();
+#endif
       startdaq->SetText("Run Start");
       filerunnum->SetIntNumber((++runnum));
 
@@ -932,7 +946,7 @@ void MainFrame::StartRun()
 
       SetMenuStatus(true,flagonlinemode);
 
-   
+
       onlinemode->SetEnabled(1);
       filesetdone->SetEnabled(1);
       recordchk->SetEnabled(1);
@@ -959,7 +973,7 @@ void MainFrame::RunReadData()
   int counter = 0;
   while(detector->StopRun())
     {
-      // failed to stop run 
+      // failed to stop run
       sleep(1); // wait 1s then try again
       counter++;
       if(counter > 10) break;
@@ -990,9 +1004,9 @@ void MainFrame::RunReadData()
 	}
     }
 #endif
-  writelog.close(); 
+  writelog.close();
 
-  
+
   detector->SaveDSPPars(DSPParsFileName);
   for(int i = 0;i < detector->NumModules; i++)
     {
@@ -1039,6 +1053,16 @@ void MainFrame::SetOnlineDataFlag()
       detector->SetOnlineFlag(0);
       std::cout<<"DAQ wont send online data!"<<std::endl;
     }
+}
+
+
+bool MainFrame::IsRunning() {
+	return fstartdaq;
+}
+
+
+int32_t MainFrame::RunNumber() {
+	return runnum;
 }
 
 
@@ -1093,10 +1117,10 @@ bool MainFrame::CreateDirectory(const char *path)
       return true;
     }
   else
-    {   	  
+    {
       printf("cant't creat the directory %s.\n",path);
       printf("errno：%d\n",errno);
-      printf("ERR  ：%s\n",strerror(errno));	
+      printf("ERR  ：%s\n",strerror(errno));
       return false;
     }
 }
@@ -1176,7 +1200,7 @@ void MainFrame::ExpModeInit()
 	expmodeinitwrite<<mod <<"  "<<i<<"  "<<ChanParData<<endl;
       }
   expmodeinitwrite.close();
-  
+
 }
 
 
@@ -1193,7 +1217,7 @@ int MainFrame::GetLocalIP(char* outip)
   //初始化ifconf
   ifconf.ifc_len = 512;
   ifconf.ifc_buf = buf;
- 
+
   if((sockfd = socket(AF_INET, SOCK_DGRAM, 0))<0)
     {
       return -1;
@@ -1202,7 +1226,7 @@ int MainFrame::GetLocalIP(char* outip)
   close(sockfd);
   //接下来一个一个的获取IP地址
   ifreq = (struct ifreq*)buf;
- 
+
   for(i=(ifconf.ifc_len/sizeof(struct ifreq)); i>0; i--)
     {
       ip = inet_ntoa(((struct sockaddr_in*)&(ifreq->ifr_addr))->sin_addr);
@@ -1226,5 +1250,5 @@ int MainFrame::GetLocalIP(char* outip)
   return -1;
 }
 
-// 
+//
 // MainFrame.cc ends here

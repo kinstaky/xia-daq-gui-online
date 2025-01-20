@@ -1,0 +1,21 @@
+syntax = "proto3";
+package rong;
+
+service pixie16 {
+	rpc GetState(Request) returns (Reply) {}
+	rpc RunControl(Action) returns (Reply) {}
+}
+
+message Request {
+    int32 type = 1;
+}
+
+message Action {
+	int32 type = 1;
+	int32 option = 2;
+	int32 extra = 3;
+}
+
+message Reply {
+	int32 status = 1;
+}

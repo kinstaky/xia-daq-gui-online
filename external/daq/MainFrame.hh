@@ -57,6 +57,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <mutex>
 using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -99,6 +100,8 @@ public:
   void SetOnlineDataFlag();
   void SetRecordDataFlag();
   void SetOnlineMode();
+  bool IsRunning();
+  int32_t RunNumber();
 #ifdef DECODERONLINE
   void SetDecoderDataFlag();
 #endif
@@ -181,6 +184,9 @@ private:
   bool            fonlinedata;
   bool            frecorddata;
   bool            fstartdaq;
+#ifdef REMOTE_CONTROL_GRPC
+  std::mutex start_flag_mutex_;
+#endif
 
 #ifdef DECODERONLINE
 TGCheckButton   *decoderchk;
