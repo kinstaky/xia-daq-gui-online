@@ -1,6 +1,6 @@
 # Changelog
 
-# v.1.0.3
+# v1.0.3
 ### Bug Fix
 + add firmware and chnage firmware path
 
