@@ -6,5 +6,5 @@ target_compile_definitions(
 	Pixie16Sys PRIVATE PLX_LITTLE_ENDIAN PCI_CODE PLX_LINUX
 )
 target_compile_options(
-	Pixie16Sys PRIVATE -fcommon -fPIC
+	Pixie16Sys PRIVATE -fcommon -fPIC $<$<CONFIG:Release>:-O0> $<$<CONFIG:Release>:-fno-strict-aliasing>
 )

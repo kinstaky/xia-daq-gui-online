@@ -5,7 +5,11 @@
 #include <iostream>
 #include <cstdio>
 #include <iomanip>
+#if __cplusplus >= 201703L
 #include <filesystem>
+#else
+#include <experimental/filesystem>
+#endif
 
 #if defined (__cplusplus)
 extern "C" {
@@ -562,7 +566,11 @@ void SaveOnlineInformation(
 	// get directory path
 	std::string path = std::string(getenv("HOME")) + "/.xia-daq-gui-online";
 	// create directory
+#if __cplusplus >= 201703L
 	std::filesystem::create_directories(path);
+#else
+	std::experimental::filesystem::create_directories(path);
+#endif
 	// open file
 	std::ofstream fout(path+"/online_information.txt");
 	fout << run << "\n"

@@ -8,14 +8,14 @@ constexpr int kActionRunNumber = 0;
 constexpr int kActionRunStart = 1;
 constexpr int kActionRunChange = 2;
 
-RongPixie16Service::RongPixie16Service(MainFrame *frame)
+Pixie16Service::Pixie16Service(MainFrame *frame)
 : frame_(frame) {
 }
 
-grpc::ServerUnaryReactor* RongPixie16Service::GetState(
+grpc::ServerUnaryReactor* Pixie16Service::GetState(
 	grpc::CallbackServerContext *context,
-    const rong::Request *request,
-    rong::Reply *reply
+    const easydaq::Request *,
+    easydaq::Reply *reply
 ) {
 	reply->set_status(frame_->IsRunning() ? kStateRunning : kStateIdle);
 	auto *reactor = context->DefaultReactor();
@@ -24,10 +24,10 @@ grpc::ServerUnaryReactor* RongPixie16Service::GetState(
 }
 
 
-grpc::ServerUnaryReactor* RongPixie16Service::RunControl(
+grpc::ServerUnaryReactor* Pixie16Service::RunControl(
 	grpc::CallbackServerContext *context,
-	const rong::Action *action,
-	rong::Reply *reply
+	const easydaq::Action *action,
+	easydaq::Reply *reply
 ) {
 	if (action->type() == kActionRunNumber) {
 		// get run number
@@ -53,12 +53,12 @@ grpc::ServerUnaryReactor* RongPixie16Service::RunControl(
 RemoteGrpcServer::RemoteGrpcServer(MainFrame *frame)
 : service_(nullptr) {
 	// builder
-	std::string server_address("0.0.0.0:22331");
+	std::string server_address("0.0.0.0:22330");
 	grpc::ServerBuilder builder;
 	builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
 
 	// service
-	service_ = new RongPixie16Service(frame);
+	service_ = new Pixie16Service(frame);
 	builder.RegisterService(service_);
 	std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
 	server->Wait();

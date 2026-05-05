@@ -3,23 +3,23 @@
 
 #include <grpcpp/grpcpp.h>
 
-#include "pixie16_rong.grpc.pb.h"
+#include "pixie16.grpc.pb.h"
 #include "external/daq/MainFrame.hh"
 
-class RongPixie16Service final : public rong::pixie16::CallbackService {
+class Pixie16Service final : public easydaq::pixie16::CallbackService {
 public:
-	explicit RongPixie16Service(MainFrame *frame);
+	explicit Pixie16Service(MainFrame *frame);
 
 	grpc::ServerUnaryReactor* GetState(
 		grpc::CallbackServerContext *context,
-		const rong::Request *request,
-		rong::Reply *reply
+		const easydaq::Request *request,
+		easydaq::Reply *reply
 	);
 
 	grpc::ServerUnaryReactor* RunControl(
 		grpc::CallbackServerContext *context,
-		const rong::Action *action,
-		rong::Reply *reply
+		const easydaq::Action *action,
+		easydaq::Reply *reply
 	);
 private:
 	MainFrame *frame_;
@@ -33,7 +33,7 @@ public:
 	~RemoteGrpcServer();
 
 private:
-	RongPixie16Service *service_;
+	Pixie16Service *service_;
 };
 
 

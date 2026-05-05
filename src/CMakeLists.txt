@@ -19,5 +19,5 @@ set_target_properties(
 if (BUILD_GRPC_SERVER)
 	add_library(remote_grpc_server remote_grpc_server.cpp)
 	target_include_directories(remote_grpc_server PUBLIC "${PROJECT_SOURCE_DIR}")
-	target_link_libraries(remote_grpc_server PUBLIC pixie16_rong_grpc_proto gui)
+	target_link_libraries(remote_grpc_server PUBLIC pixie16_grpc_proto gui)
 endif()

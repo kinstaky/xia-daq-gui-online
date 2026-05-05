@@ -8,6 +8,7 @@ target_link_libraries(
 	Pixie16App Pixie16Sys
 	ROOT::Core ROOT::Gui ROOT::Graf
 	iceoryx_binding_c::iceoryx_binding_c
+	stdc++fs
 )
 target_compile_options(
 	gui PUBLIC -fno-stack-protector ${ICEORYX_WARNINGS} ${ICEORYX_SANITIZER_FLAGS}
