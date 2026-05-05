@@ -134,7 +134,7 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 				expected_id = header_[module]->id;
 				group_info_[group_index_[module]].valid_packets = 1;
 				// release out dated packet
-				for (size_t i = 0; i < module; ++i) {
+				for (size_t i = 0; i < module_num_; ++i) {
 					// ignore other group
 					if (group_index_[i] != group_index_[module]) continue;
 					// ignore empty chunk
