@@ -681,6 +681,7 @@ void AllocatePayload(
 		*packet = nullptr;
 		iox::LogWarn() << "Failed to allocate user payload! "
 			<< "Error code " << int(res);
+		return;
 	}
 	// success, get header pointer
 	*header = (PacketHeader*)iox_chunk_header_to_user_header(
