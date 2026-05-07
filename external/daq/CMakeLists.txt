@@ -11,7 +11,9 @@ target_link_libraries(
 	stdc++fs
 )
 target_compile_options(
-	gui PUBLIC -fno-stack-protector ${ICEORYX_WARNINGS} ${ICEORYX_SANITIZER_FLAGS}
+	gui PUBLIC -fno-stack-protector
+	${ICEORYX_WARNINGS} ${ICEORYX_SANITIZER_FLAGS}
+	$<$<CONFIG:Release>:-O0> $<$<CONFIG:Release>:-fno-strict-aliasing>
 )
 set_target_properties(
 	gui PROPERTIES
