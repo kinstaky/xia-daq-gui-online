@@ -4,12 +4,15 @@
 #include <iostream>
 #include <fstream>
 
+#include "include/daq_packet.h"
+
 void ReadOnlineInformation(
 	int &run,
 	int &crate,
 	size_t &module_num,
 	std::vector<int> &module_sampling_rate,
-	std::vector<int> &group_index
+	std::vector<int> &group_index,
+	std::vector<int> &module_slot
 ) {
 	module_sampling_rate.clear();
 	group_index.clear();
@@ -29,6 +32,10 @@ void ReadOnlineInformation(
 		fin >> tmp;
 		group_index.push_back(tmp);
 	}
+	for (size_t i = 0; i < module_num; ++i) {
+		fin >> tmp;
+		module_slot.push_back(tmp);
+	}
 	// close file
 	fin.close();
 }
@@ -44,10 +51,9 @@ OnlineDataReceiver::OnlineDataReceiver(
 	iox::runtime::PoshRuntime::initRuntime(name);
 
 	// get online information
-	int run, crate;
 	ReadOnlineInformation(
-		run, crate, module_num_,
-		sampling_rate_, group_index_
+		run_, crate_, module_num_,
+		sampling_rate_, group_index_, module_slot_
 	);
 
 	// subscriber options
@@ -59,10 +65,10 @@ OnlineDataReceiver::OnlineDataReceiver(
     options.nodeName = "online-node";
 
 	// initialize subscribers
-	std::string run_name = "run" + std::to_string(run);
+	std::string run_name = "run" + std::to_string(run_);
 	for (size_t i = 0; i < module_num_; ++i) {
 		std::string module_name =
-			"c" + std::to_string(crate) + "m" + std::to_string(i);
+			"c" + std::to_string(crate_) + "m" + std::to_string(i);
 		subscriber_[i] = iox_sub_init(
 			subscriber_storage_+i,
 			service_name, run_name.c_str(), module_name.c_str(),
@@ -89,6 +95,7 @@ OnlineDataReceiver::OnlineDataReceiver(
 		group_info_[i].size = 0;
 		group_info_[i].valid_packets = 0;
 		group_info_[i].expect_id = 0;
+		last_packet_id_[i] = -1;
 	}
 	for (size_t i = 0; i < module_num_; ++i) {
 		if (group_index_[i] < 0) continue;
@@ -125,6 +132,8 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 					)
 				)
 			);
+			std::cout << "Get packet with id " << header_[module]->id
+				<< " in module " << module << "\n";
 			// check packet id
 			uint64_t &expected_id =
 				group_info_[group_index_[module]].expect_id;
@@ -160,13 +169,17 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 			}
 			packet_[module] = (const DaqPacket*)user_payload_[module];
 			first_events_[module].used = true;
-			decode_offset_[module] = 0;
 		}
 
 		// check all groups, record taken group
 		for (size_t g : valid_group_index_) {
 			if (group_info_[g].valid_packets == group_info_[g].size) {
 				has_taken_.push_back(int(g));
+				// search offset for each valid module
+				for (size_t i = 0; i < module_num_; ++i) {
+					if (group_index_[i] != int(g)) continue;
+					SearchDecodeOffset(i);
+				}
 			}
 		}
 		if (has_taken_.empty()) return nullptr;
@@ -185,7 +198,7 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 // }
 
 	// timestamps of first events
-	int64_t ref_timestamp;
+	int64_t ref_timestamp = -1;
 	// initialize
 	event_.clear();
 
@@ -195,10 +208,8 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 		// get first events
 		for (size_t i = 0; i < module_num_; ++i) {
 			if (group_index_[i] != has_taken_.back()) continue;
-			if (
-				first_events_[i].used
-				&& decode_offset_[i]+sizeof(DataHeader)/4 < header_[i]->length
-			) {
+			if (!first_events_[i].used) continue;
+			if (decode_offset_[i]+sizeof(DataHeader)/4 < header_[i]->length) {
 				Decode(
 					packet_[i]->data,
 					decode_offset_[i],
@@ -332,4 +343,41 @@ void OnlineDataReceiver::Decode(
 	// used
 	event.used = false;
 	return;
+}
+
+
+bool ValidateEvents(
+	const unsigned int *data,
+	size_t length,
+	unsigned int crate_id,
+	unsigned int slot_id,
+	int count = 5
+) {
+	size_t offset = 0;
+	for (int i = 0; i < count; ++i) {
+		if (length - offset < 4) return false;
+		const unsigned int *header = data + offset;
+		unsigned int peek_crate = (header[0] >> 8) & 0xf;
+		unsigned int peek_slot = (header[0] >> 4) & 0xf;
+		if (crate_id != peek_crate || slot_id != peek_slot) return false;
+		unsigned int event_length = (header[0] >> 17) & 0x3fff;
+		unsigned int header_length = (header[0] >> 12) & 0x1f;
+		unsigned int trace_length = (header[3] >> 16) & 0x7fff;
+		if ((event_length - header_length)*2 != trace_length) return false;
+		offset += event_length;
+	}
+	return true;
+}
+
+
+void OnlineDataReceiver::SearchDecodeOffset(size_t mod) {
+	size_t &offset = decode_offset_[mod];
+	for (offset = 0; offset < header_[mod]->length; ++offset) {
+		if (ValidateEvents(
+			packet_[mod]->data + offset,
+			header_[mod]->length - offset,
+			crate_,
+			module_slot_[mod]
+		)) break;
+	}
 }

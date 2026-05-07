@@ -55,11 +55,13 @@ constexpr int fps = 100;
 /// @param[in] crate crate number
 /// @param[in] sampling_rate module sampling rate
 /// @param[in] group_index group index of module
+/// @param[in] module_slot module slot, start from 2
 void SaveOnlineInformation(
 	const int run,
 	const int crate,
 	const std::vector<unsigned int> &sampling_rate,
-	const std::vector<unsigned int> &group_index
+	const std::vector<unsigned int> &group_index,
+	const std::vector<unsigned int> &module_slot
 ) {
 	// get directory path
 	std::string path = std::string(getenv("HOME")) + "/.xia-daq-gui-online";
@@ -75,6 +77,9 @@ void SaveOnlineInformation(
 	}
 	for (size_t i = 0; i < group_index.size(); ++i) {
 		fout << group_index[i] << " \n"[i==group_index.size()-1];
+	}
+	for (size_t i = 0; i < module_slot.size(); ++i) {
+		fout << module_slot[i] << " \n"[i==module_slot.size()-1];
 	}
 	// close file
 	fout.close();
@@ -202,7 +207,8 @@ int main() {
 
 	std::vector<unsigned int> sampling_rate = {100, 100, 100, 100};
 	std::vector<unsigned int> group_index = {0, 0, 0, 0};
-	SaveOnlineInformation(run, crate, sampling_rate, group_index);
+	std::vector<unsigned int> module_slot = {2, 3, 4, 5};
+	SaveOnlineInformation(run, crate, sampling_rate, group_index, module_slot);
 
 	// accumulated interval time
 	double accumulated_interval = 0.0;

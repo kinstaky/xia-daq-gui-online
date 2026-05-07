@@ -40,6 +40,9 @@ public:
 
 	bool Alive() const;
 
+
+	void SearchDecodeOffset(size_t mod);
+
 private:
 
 	void Decode(
@@ -49,6 +52,10 @@ private:
 		DecodeEvent &event
 	);
 
+	// crate id
+	int crate_;
+	// run number
+	int run_;
     // number of modules
 	size_t module_num_;
 	// sampling ratae
@@ -63,6 +70,8 @@ private:
 	const PacketHeader *header_[16];
 	// actual packet data
 	const DaqPacket *packet_[16];
+	// module slot (slot id)
+	std::vector<int> module_slot_;
 	// has taken chunks
 	std::vector<int> has_taken_;
 
@@ -72,6 +81,8 @@ private:
 	std::set<int> valid_group_index_;
 	// group policy information
 	GroupPolicyInfo group_info_[16];
+	// last decoded group packet id
+	int last_packet_id_[16];
 
 	// the first event of each module
 	DecodeEvent first_events_[16];

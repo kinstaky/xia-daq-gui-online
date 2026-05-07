@@ -152,7 +152,9 @@ void FillOnlineGraph(
 
 	hist_strip.Fill(front_strip, back_strip);
 	hist_energy.Fill(front_energy);
-	hist_interval.Fill(front_time - last_time);
+	if (last_time > 0) {
+		hist_interval.Fill(front_time - last_time);
+	}
 	hist_time_difference.Fill(front_time - back_time);
 	current_time = front_time;
 }
@@ -232,7 +234,7 @@ int main(int argc, char **argv) {
 
 	OnlineDataReceiver receiver(app_name, "ExampleSimulateOnline");
 	// time of last event
-	double last_time;
+	double last_time = -1.0;
 	while (receiver.Alive()) {
 		for (
 			std::vector<DecodeEvent> *event = receiver.ReceiveEvent(time_window);

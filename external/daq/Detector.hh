@@ -235,11 +235,10 @@ private:
 	uint64_t packet_id_[PRESET_MAX_MODULES];
 	size_t packet_unread_words_[PRESET_MAX_MODULES];
 	size_t packet_read_position_[PRESET_MAX_MODULES];
-	size_t packet_tail_[PRESET_MAX_MODULES];
+	// size_t packet_tail_[PRESET_MAX_MODULES];
 	// group policy
 	std::vector<unsigned int> group_index_;
 	bool group_read_[PRESET_MAX_MODULES];
-	std::vector<size_t> module_align_;
 };
 
 #endif /*DETECTOR_HH_*/

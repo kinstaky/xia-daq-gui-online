@@ -93,13 +93,8 @@ bool Detector::ReadConfigFile(char *config)
 	wuReadData::ReadVector("ModuleBits", config, modulebits);
 
 	wuReadData::ReadVector("ModuleGroupIndex", config, &group_index_, true);
-	wuReadData::ReadVector("ModuleAlignment", config, &module_align_, true);
 	if (group_index_.size() != modulesamplingrate->size()) {
 		std::cerr << "[Error] ModuleGroupIndex size != ModuleSamplingRate size.\n";
-		return false;
-	}
-	if (module_align_.size() != modulesamplingrate->size()) {
-		std::cerr << "[Error] ModuleAlignment size != ModuleSamplingRate size.\n";
 		return false;
 	}
 
@@ -561,7 +556,8 @@ void SaveOnlineInformation(
 	const int run,
 	const int crate,
 	const std::vector<unsigned short> &sampling_rate,
-	const std::vector<unsigned int> &group_index
+	const std::vector<unsigned int> &group_index,
+	const std::vector<unsigned short> &module_slot
 ) {
 	// get directory path
 	std::string path = std::string(getenv("HOME")) + "/.xia-daq-gui-online";
@@ -581,6 +577,9 @@ void SaveOnlineInformation(
 	}
 	for (size_t i = 0; i < group_index.size(); ++i) {
 		fout << group_index[i] << " \n"[i==group_index.size()-1];
+	}
+	for (size_t i = 0; i < module_slot.size(); ++i) {
+		fout << module_slot[i] << " \n"[i==module_slot.size()-1];
 	}
 	// close file
 	fout.close();
@@ -654,7 +653,8 @@ int Detector::StartRun(int continue_run)
 		runnumber,
 		crateid,
 		*modulesamplingrate,
-		group_index_
+		group_index_,
+		*moduleslot
 	);
 
 	return 0;
@@ -764,10 +764,10 @@ int Detector::ReadDataFromModules(int thres,unsigned short  endofrun) {
 				if (user_payload_[i]) {
 					// get copy words
 					size_t copy_words = packet_unread_words_[i];
-					// get packet tail
-					packet_tail_[i] = packet_unread_words_[i] % module_align_[i];
-					// align in 4 words
-					copy_words -= packet_tail_[i];
+					// // get packet tail
+					// packet_tail_[i] = packet_unread_words_[i] % module_align_[i];
+					// // align in 4 words
+					// copy_words -= packet_tail_[i];
 					// copy to shared memory
 					memcpy(
 						(void*)(packet_[i]->data + header_[i]->length),
@@ -779,8 +779,9 @@ int Detector::ReadDataFromModules(int thres,unsigned short  endofrun) {
 // if (packet_read_position_[i]+copy_words > buffer_top_[i]) std::cout << "Copy over buffer top, " << i << ", "
 // 	<< "read position " << packet_read_position_[i] << ", copy words " << copy_words
 // 	<< ", buffer top " << buffer_top_[i] << ", packet id " << packet_id_[group_index_[i]] << "\n";
-					packet_tail_[i] = (module_align_[i] - packet_tail_[i]) % module_align_[i];
-					packet_read_position_[i] = packet_tail_[i];
+					// packet_tail_[i] = (module_align_[i] - packet_tail_[i]) % module_align_[i];
+					// packet_read_position_[i] = packet_tail_[i];
+					packet_read_position_[i] = 0;
 					packet_unread_words_[i] = 0;
 				}
 				SavetoFile(i);
@@ -802,15 +803,15 @@ int Detector::ReadDataFromModules(int thres,unsigned short  endofrun) {
 		if (group_read_[group_index_[i]]) {
 			// copy to payload and publish
 			if (user_payload_[i]) {
-				if (packet_tail_[i]) {
-					packet_unread_words_[i] -= packet_tail_[i];
-					packet_tail_[i] = 0;
-				}
+				// if (packet_tail_[i]) {
+				// 	packet_unread_words_[i] -= packet_tail_[i];
+				// 	packet_tail_[i] = 0;
+				// }
 				size_t copy_words =
 					packet_unread_words_[i] + header_[i]->length <= PACKET_SIZE
 					? packet_unread_words_[i]
 					: PACKET_SIZE - header_[i]->length;
-				copy_words -= copy_words % module_align_[i];
+				// copy_words -= copy_words % module_align_[i];
 				memcpy(
 					(void*)(packet_[i]->data+header_[i]->length),
 					(void*)(buffer_[i]+packet_read_position_[i]),
@@ -1039,7 +1040,7 @@ int Detector::OpenSaveFile(int n,const char *FileN)
 		packet_id_[i] = 0;
 		packet_unread_words_[i] = 0;
 		packet_read_position_[i] = 0;
-		packet_tail_[i] = 0;
+		// packet_tail_[i] = 0;
 	}
 #ifdef RECODESHA256
 			SHA256_Init(&sha256_ctx[n]);
