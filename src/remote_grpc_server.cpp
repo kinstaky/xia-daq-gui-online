@@ -18,6 +18,7 @@ grpc::ServerUnaryReactor* Pixie16Service::GetState(
     easydaq::Reply *reply
 ) {
 	reply->set_status(frame_->IsRunning() ? kStateRunning : kStateIdle);
+	reply->set_run(frame_->RunNumber());
 	auto *reactor = context->DefaultReactor();
 	reactor->Finish(grpc::Status::OK);
 	return reactor;
@@ -32,16 +33,20 @@ grpc::ServerUnaryReactor* Pixie16Service::RunControl(
 	if (action->type() == kActionRunNumber) {
 		// get run number
 		reply->set_status(frame_->RunNumber());
+		reply->set_run(frame_->RunNumber());
 	} else if (action->type() == kActionRunStart) {
 		// start new run
 		frame_->StartRun();
 		reply->set_status(frame_->IsRunning() ? 1 : 0);
+		reply->set_run(frame_->RunNumber());
 	} else if (action->type() == kActionRunChange) {
 		if (frame_->IsRunning()) {
 			reply->set_status(-1);
+			reply->set_run(frame_->RunNumber());
 		} else {
 			frame_->ChangeRunNumber(action->option());
 			reply->set_status(frame_->RunNumber());
+			reply->set_run(frame_->RunNumber());
 		}
 	}
 	auto* reactor = context->DefaultReactor();
