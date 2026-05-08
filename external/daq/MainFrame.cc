@@ -765,6 +765,7 @@ void MainFrame::ConfigFileInfo()
       startdaq->SetEnabled(1);
       fstartdaq = 0;
       detector->SetRunFlag(fstartdaq);
+      runnum = (int)filerunnum->GetIntNumber();
 
       if(flagonlinemode == 0)
       	{
