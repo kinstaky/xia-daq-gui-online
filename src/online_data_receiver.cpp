@@ -132,8 +132,8 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 					)
 				)
 			);
-			std::cout << "Get packet with id " << header_[module]->id
-				<< " in module " << module << "\n";
+			// std::cout << "Get packet with id " << header_[module]->id
+			// 	<< " in module " << module << "\n";
 			// check packet id
 			uint64_t &expected_id =
 				group_info_[group_index_[module]].expect_id;
