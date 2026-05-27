@@ -45,6 +45,7 @@ endif()
 
 # build options
 option(BUILD_GRPC_SERVER "Build gRPC server" OFF)
+option(BUILD_FAKE_PIXIE_TEST "Build fake Pixie test targets" OFF)
 
 # find root
 find_package(ROOT 6.20 CONFIG REQUIRED)
@@ -105,7 +106,13 @@ if (BUILD_GRPC_SERVER)
 	# The protobuf files
 	add_subdirectory(proto)
 endif()
+if (BUILD_FAKE_PIXIE_TEST)
+	add_subdirectory(test/fake_pixie)
+endif()
 add_subdirectory(external)
 add_subdirectory(src)
 add_subdirectory(bin)
 add_subdirectory(examples)
+if (BUILD_FAKE_PIXIE_TEST)
+	add_subdirectory(test)
+endif()
