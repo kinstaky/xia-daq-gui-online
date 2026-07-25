@@ -45,6 +45,7 @@ endif()
 
 # build options
 option(BUILD_GRPC_SERVER "Build gRPC server" OFF)
+option(BUILD_FAKE_PIXIE "Build fake pixie implementation" OFF)
 
 # find root
 find_package(ROOT 6.20 CONFIG REQUIRED)
@@ -85,6 +86,8 @@ if (BUILD_GRPC_SERVER)
 endif()
 
 
+
+
 # show properties
 MESSAGE("Build Properties")
 MESSAGE("  c++ compiler.........: " ${CMAKE_CXX_COMPILER})
@@ -98,6 +101,9 @@ MESSAGE("  iceoryx version......: " ${iceoryx_binding_c_VERSION})
 if (BUILD_GRPC_SERVER)
 	MESSAGE("  protobuf.............: " ${Protobuf_VERSION})
 	MESSAGE("  grpc.................: " ${gRPC_VERSION})
+endif()
+if (BUILD_FAKE_PIXIE)
+	MESSAGE("  fake pixie...........: " ${BUILD_FAKE_PIXIE})
 endif()
 
 

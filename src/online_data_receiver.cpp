@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 
 #include "include/daq_packet.h"
@@ -185,8 +186,8 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 		if (has_taken_.empty()) return nullptr;
 	}
 
-// if (!has_taken_) {
-// 	for (int m = 0; m < 4; ++m) {
+// if (!has_taken_.empty()) {
+// 	for (int m = 0; m < module_num_; ++m) {
 // 		for (int j = 0; j < 4; ++j) {
 // 			std::cout
 // 				<< "Module " << m
@@ -216,6 +217,13 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 					sampling_rate_[i],
 					first_events_[i]
 				);
+				// std::cout << "Module " << i
+				// 	<< ", length " << header_[i]->length
+				// 	<< ", offset " << decode_offset_[i]
+				// 	<< std::endl;
+				// std::cout << "Module: " << i << ", module " << first_events_[i].module
+				// 	<< ", ch " << first_events_[i].channel << ", energy " << first_events_[i].energy
+				// 	<< ", ts " << first_events_[i].timestamp << std::endl;
 			}
 		}
 
@@ -286,6 +294,10 @@ std::vector<DecodeEvent>* OnlineDataReceiver::ReceiveEvent(
 	}
 
 	if (event_.empty()) return nullptr;
+	// for (size_t i = 0; i < event_.size(); ++i) {
+	// 	std::cout << i << ": module " << event_[i].module << ", ch " << event_[i].channel
+	// 		<< ", energy " << event_[i].energy << ", ts " << event_[i].timestamp << std::endl;
+	// }
 	return &event_;
 }
 
@@ -305,6 +317,13 @@ void OnlineDataReceiver::Decode(
 	const DataHeader *header = (const DataHeader*)(data + offset);
 	// get event length and increase offset
 	int event_length = (header->data[0] >> 17) & 0x3fff;
+	// std::cout << "  Event length: " << event_length << std::endl;
+	// std::cout << "  " << std::hex << std::setw(8) << std::setfill('0') << header->data[0]
+	// 	<< "\n  " << std::setw(8) << std::setfill('0') << header->data[1]
+	// 	<< "\n  " << std::setw(8) << std::setfill('0') << header->data[2]
+	// 	<< "\n  " << std::setw(8) << std::setfill('0') << header->data[3]
+	// 	<< std::dec << std::endl;
+
 	offset += event_length;
 	// fill information
 	event.module = (unsigned short)(((header->data[0] >> 4) & 0xf) - 2);

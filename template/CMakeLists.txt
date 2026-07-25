@@ -1,6 +1,6 @@
 add_executable(online_template online_template.cpp)
 target_include_directories(
-	online_template PRIVATE ${PROJECT_SOURCE_DIR} ROOT_INCLUDE_DIRS
+	online_template PRIVATE ${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIRS}
 )
 target_link_libraries(
 	online_template PUBLIC

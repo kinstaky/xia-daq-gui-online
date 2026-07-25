@@ -1,7 +1,7 @@
 add_executable(alpha_source_dssd_simulation alpha_source_dssd_simulation.cpp)
 target_include_directories(
 	alpha_source_dssd_simulation PRIVATE
-	"${PROJECT_SOURCE_DIR}" ROOT_INCLUDE_DIRS
+	"${PROJECT_SOURCE_DIR}" ${ROOT_INCLUDE_DIRS}
 )
 target_link_libraries(
 	alpha_source_dssd_simulation PRIVATE
@@ -21,7 +21,7 @@ set_target_properties(
 
 add_executable(online_example online_example.cpp)
 target_include_directories(
-	online_example PRIVATE ${PROJECT_SOURCE_DIR} ROOT_INCLUDE_DIRS
+	online_example PRIVATE ${PROJECT_SOURCE_DIR} ${ROOT_INCLUDE_DIRS}
 )
 target_link_libraries(
 	online_example PUBLIC
@@ -39,3 +39,7 @@ root_generate_dictionary(
 	MODULE online_example
 	LINKDEF ${PROJECT_SOURCE_DIR}/include/linkdef.h
 )
+
+if (BUILD_FAKE_PIXIE)
+	add_subdirectory(pixie_simulation)
+endif()

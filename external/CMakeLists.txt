@@ -1,2 +1,4 @@
 add_subdirectory(daq)
-add_subdirectory(pixie)
+if (NOT BUILD_FAKE_PIXIE)
+	add_subdirectory(pixie)
+endif()
