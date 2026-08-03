@@ -34,6 +34,7 @@ public:
 
 private:
 	std::mt19937 rng_;
+	std::normal_distribution<double> ppac_time_distribution_;
 	std::normal_distribution<double> dssd_energy_distribution_;
 	std::normal_distribution<double> dssd_time_distribution_;
 };

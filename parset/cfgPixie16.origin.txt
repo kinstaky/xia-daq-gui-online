@@ -5,7 +5,7 @@ CrateID 0
 
 ## Register parameters
 
-SettingPars ./parset/test-online-0617-1.set
+SettingPars ./parset/DSPpar.set
 
 
 ## -----------------------------------------------------------------------------
@@ -33,10 +33,6 @@ ModuleBits 2 14 14
 # module group index, used in kinstaky/xia-daq-gui-online
 # The first number mean how many modules, other number means group index of each module.
 ModuleGroupIndex 2 0 0
-
-# module alignment, used in kinstaky/xia-daq-gui-online
-# The first number mean how many modules, other number means alignment words of each module.
-ModuleAlignment 2 4 4
 
 
 ## -----------------------------------------------------------------------------

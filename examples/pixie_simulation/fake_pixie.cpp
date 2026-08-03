@@ -4,7 +4,7 @@
 
 #include "examples/pixie_simulation/fake_pixie_service.h"
 
-fake::FakePixieService service(10000, 1000);
+fake::FakePixieService service(30000, 1000);
 
 extern "C" {
 
@@ -244,7 +244,7 @@ int Pixie16ReadSglChanADCTrace(
 int Pixie16CheckRunStatus(
 	unsigned short ModNum
 ) {
-	std::cout << "FakePixie16CheckRunStatus: module " << ModNum << std::endl;
+	// std::cout << "FakePixie16CheckRunStatus: module " << ModNum << std::endl;
 	return service.GetStatus(ModNum);
 }
 
@@ -262,8 +262,8 @@ int Pixie16ReadDataFromExternalFIFO(
 	unsigned int nFIFOWords,
 	unsigned short ModNum
 ) {
-	std::cout << "FakePixie16ReadDataFromExternalFIFO: module, " << ModNum
-		<< ", number of words " << nFIFOWords << std::endl;
+	// std::cout << "FakePixie16ReadDataFromExternalFIFO: module, " << ModNum
+	// 	<< ", number of words " << nFIFOWords << std::endl;
 	return service.GetData(ModNum, nFIFOWords, ExtFIFO_Data);
 }
 

@@ -19,7 +19,7 @@ extern "C" {
 
 #include "include/daq_packet.h"
 
-#include "alpha_source_dssd_global.h"
+#include "examples/dssd_global.h"
 
 // alpha source settings
 // energy of alpha source, in MeV

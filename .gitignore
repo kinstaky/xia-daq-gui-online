@@ -5,6 +5,7 @@ build
 # config
 parset/*.set
 !parset/DSPpar.set
+parset/exp/DSPpar.thre
 
 # log file
 Pixie16msg.txt

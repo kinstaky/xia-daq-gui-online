@@ -21,7 +21,7 @@
 
 #include "include/signal_handler.h"
 #include "include/online_data_receiver.h"
-#include "examples/alpha_source_dssd_global.h"
+#include "examples/dssd_global.h"
 
 // GUI fresh rate(FPS), in Hz
 constexpr int fresh_rate = 10;

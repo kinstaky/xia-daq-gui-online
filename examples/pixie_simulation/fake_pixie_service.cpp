@@ -1,5 +1,5 @@
 #include "examples/pixie_simulation/fake_pixie_service.h"
-#include "examples/alpha_source_dssd_global.h"
+#include "examples/dssd_global.h"
 
 #include <cstring>
 #include <iostream>
@@ -117,7 +117,8 @@ void FakePixieService::PrePareEvents() {
 			accumulated_interval_ = 0.0;
 		}
 		for (auto &event : detector_.Detect(event, detect_time_)) {
-			if (event.index == 3) FillBinaryData(MapDssdEvent(event));
+			if (event.index < 3) FillBinaryData(MapPpacEvent(event));
+			else FillBinaryData(MapDssdEvent(event));
 		}
 	}
 }
@@ -138,14 +139,31 @@ ModuleEvent FakePixieService::MapDssdEvent(const DetectorEvent &event) {
 	return result;
 }
 
+
+ModuleEvent FakePixieService::MapPpacEvent(const DetectorEvent &event) {
+	ModuleEvent result;
+	result.rate = 500;
+	result.crate = 0;
+	result.module = 0;
+	result.slot = 2;
+	result.channel = event.channel;
+	result.energy = event.energy;
+	result.timestamp = uint64_t(event.time * 1e8);
+	double t = event.time*1e8 - double(result.timestamp);
+	result.cfd_source = uint32_t(t * 5.0);
+	result.cfd = uint32_t((t*5.0 - result.cfd_source) * 8192.0);
+	return result;
+}
+
+
 void FakePixieService::FillBinaryData(const ModuleEvent &event) {
 	const unsigned int &index = event.module;
 	unsigned int &size = data_size_[index];
 	if (size+4 > 4096) return;
-	std::cout << "module: " << index
-		<< " channel: " << event.channel
-		<< " energy: " << event.energy
-		<< " timestamp: " << event.timestamp << std::endl;
+	// std::cout << "module: " << index
+	// 	<< " channel: " << event.channel
+	// 	<< " energy: " << event.energy
+	// 	<< " timestamp: " << event.timestamp << std::endl;
 	memset(module_data_[index]+size, 0, 16);
 	// channel
 	module_data_[index][size] |= event.channel & 0xf;

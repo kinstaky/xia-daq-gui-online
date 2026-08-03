@@ -73,6 +73,7 @@ private:
 
 	void PrePareEvents();
 	ModuleEvent MapDssdEvent(const DetectorEvent &event);
+	ModuleEvent MapPpacEvent(const DetectorEvent &event);
 	void FillBinaryData(const ModuleEvent &event);
 };
 
